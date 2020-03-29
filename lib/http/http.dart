@@ -16,9 +16,9 @@ class Http {
 		
 		Map<String, dynamic> result = jsonDecode(response.body);
 		
-		if (result['code'] == null) throw Exception('${result['message']} ${url}');
+		// if (result['code'] == null) throw Exception('${result['message']} ${url}');
 		
-		data = result;
+		return result;
 	}
 	
 	Future<Map> post(String url, {Map<String, String> body}) async {
@@ -28,7 +28,7 @@ class Http {
 		print(response.body);
 		Map<String, dynamic> result = jsonDecode(response.body);
 		
-		if (result['code'] == null) throw Exception('${result['message']} ${url}');
+		// if (result['code'] == null) throw Exception('${result['message']} ${url}');
 		
 		return result;
 	}

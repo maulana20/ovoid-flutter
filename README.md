@@ -3,7 +3,7 @@ Repository berikut ini merupakan porting dari [ovoid](https://github.com/lintang
 
 | Method  | Result  |
 |---|---|
-| `login2FA`  | In Progress |
+| `login2FA`  | Ok |
 | `login2FAVerify`  | In Progress |
 | `loginSecurityCode`  | In Progress  |
 | `getBudget`  | In Progress  |
@@ -26,7 +26,7 @@ OvoidFlutter ovoid = new OvoidFlutter();
 #### Login
 ##### Langkah 1
 ```js
-let refId = await ovoid.login2FA('nomorhandphone');
+let refId = await ovoid.login2FA('<mobilePhone>');
 ```
 
 ### Author
