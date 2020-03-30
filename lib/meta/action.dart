@@ -9,4 +9,9 @@ class Action {
 	static String getWalletTransaction = 'wallet/v2/transaction';
 	static String generateTrxId = 'v1.0/api/auth/customer/genTrxId';
 	static String transferOvo = 'v1.0/api/customers/transfer';
+	static String isOVO = 'v1.1/api/auth/customer/isOVO';
+	static String transferBank = 'transfer/direct';
+	static String transferInquiry = 'transfer/inquiry';
+	static String getRefBank = 'v1.0/reference/master/ref_bank';
+	static String allNotification = 'v1.0/notification/status/all';
 }

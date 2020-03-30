@@ -8,12 +8,12 @@ class Http {
 	final JsonDecoder _decoder = new JsonDecoder();
 	
 	Map<String, String> headers = {};
-	Map<String, dynamic> data = {};
 	
 	Future<Map> get(String url) async {
 		headers['Content-Type'] = 'application/json';
 		http.Response response = await http.get(url, headers: headers);
 		
+		print('Response GET: ${response.body}');
 		Map<String, dynamic> result = jsonDecode(response.body);
 		
 		// if (result['code'] == null) throw Exception('${result['message']} ${url}');
@@ -25,7 +25,7 @@ class Http {
 		headers['Content-Type'] = 'application/json';
 		http.Response response = await http.post(url, body: jsonEncode(body), headers: headers);
 		
-		print(response.body);
+		print('Response POST: ${response.body}');
 		Map<String, dynamic> result = jsonDecode(response.body);
 		
 		// if (result['code'] == null) throw Exception('${result['message']} ${url}');

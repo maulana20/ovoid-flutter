@@ -26,7 +26,7 @@ OvoidFlutter ovoid = new OvoidFlutter();
 #### Login
 ##### Langkah 1
 ```js
-let refId = await ovoid.login2FA('<mobilePhone>');
+final refId = (await ovoid.login2FA('<mobilePhone>'))['refId'];
 ```
 
 ### Author
