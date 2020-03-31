@@ -4,7 +4,7 @@ Repository berikut ini merupakan porting dari [ovoid](https://github.com/lintang
 | Method  | Result  |
 |---|---|
 | `login2FA`  | Ok |
-| `login2FAVerify`  | In Progress |
+| `login2FAVerify`  | Ok |
 | `loginSecurityCode`  | In Progress  |
 | `getBudget`  | In Progress  |
 | `balanceModel`  | In Progress  |
@@ -21,12 +21,17 @@ Repository berikut ini merupakan porting dari [ovoid](https://github.com/lintang
 ### Dokumentasi
 ```js
 import 'package:ovoid_flutter/ovoid_flutter.dart';
+
 OvoidFlutter ovoid = new OvoidFlutter();
 ```
 #### Login
 ##### Langkah 1
 ```js
 final refId = (await ovoid.login2FA('<mobilePhone>'))['refId'];
+```
+##### Langkah 2
+```js
+final accessToken = (await ovoid.login2FAVerify(refId, '<OTP>', '<mobilePhone>'))['updateAccessToken'];
 ```
 
 ### Author
