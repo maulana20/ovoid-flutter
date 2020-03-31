@@ -1,9 +1,5 @@
-import 'dart:async';
+import 'package:flutter/material.dart';
 
-import 'package:ovoid_flutter/ovoid_flutter.dart';
+import 'screen/ovoid_screen.dart';
 
-void main() async {
-	OvoidFlutter ovoid = new OvoidFlutter();
-	
-	final refId = (await ovoid.login2FA('<mobilePhone>'))['refId'];
-}
+void main() => runApp(OvoidScreen());
