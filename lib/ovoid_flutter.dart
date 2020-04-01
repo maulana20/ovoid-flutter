@@ -72,8 +72,6 @@ class OvoidFlutter {
 		http.headers = headers;
 		final response = await http.post(BASE_ENDPOINT + Action.loginSecurityCode, body: body);
 		
-		authToken = response['updateAccessToken'];
-		
 		return {
 			'token'				: response['token'],
 			'tokenSeed'			: response['tokenSeed'],
