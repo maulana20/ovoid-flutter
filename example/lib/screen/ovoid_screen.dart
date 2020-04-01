@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'login/login_page.dart';
-import 'home/dashboard_page.dart';
 
 class OvoidScreen extends StatelessWidget {
+	String appTitle = 'OVOID FLUTTER';
 	@override
 	Widget build(BuildContext context) {
 		return MaterialApp(
-			title: 'Flutter Bus',
+			title: appTitle,
 			theme: ThemeData(
 				primarySwatch: Colors.blue,
 			),
-			home: LoginPage(),
+			home: LoginPage(appTitle: appTitle),
 		);
 	}
 }

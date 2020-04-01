@@ -1,26 +1,36 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ovoid_flutter/ovoid_flutter.dart';
 
+import '../home/dashboard_page.dart';
+
 class LoginPage extends StatefulWidget {
+	LoginPage({ this.appTitle });
+	
+	String appTitle;
+	
 	@override
-	_LoginPageState createState() => new _LoginPageState();
+	_LoginPageState createState() => new _LoginPageState(appTitle: appTitle);
 }
 
 class _LoginPageState extends State<LoginPage> {
+	_LoginPageState({ this.appTitle });
+	
 	OvoidFlutter ovoid = new OvoidFlutter();
 	
 	final mobileController = TextEditingController();
 	final OTPController = TextEditingController();
+	final PINOVOController = TextEditingController();
 	
-	String refId;
+	String appTitle;
 	bool _obscureText = true;
 	
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
-			appBar: AppBar( title: Center(child: Text('OVOID FLUTTER')), ),
+			appBar: AppBar( title: Center(child: Text(appTitle)), ),
 			body: Container(
 				color: Colors.white,
 				child: ListView(
@@ -90,13 +100,25 @@ class _LoginPageState extends State<LoginPage> {
 		);
 	}
 	
+	Future<String> setPreference(String index, String value) async {
+		SharedPreferences preferences = await SharedPreferences.getInstance();
+		setState(() { preferences.setString('${index}', '${value}'); });
+	}
+	
+	Future<String> getPreference(String index) async {
+		SharedPreferences preferences = await SharedPreferences.getInstance();
+		return preferences.getString(index);
+	}
+	
 	// STEP login2FA OVOID FLUTTER
 	
 	Future<String> login2FA(BuildContext context) async {
-		refId = (await ovoid.login2FA(mobileController.text))['refId'];
+		final refId = (await ovoid.login2FA(mobileController.text))['refId'];
 		
-		if (refId == null) {
-			alert(context, 'Response refId not found !');
+		setState(() { setPreference('refId', refId); });
+		
+		if (refId.isEmpty) {
+			alert(context, 'Response login2FA take data refId not found !');
 		} else {
 			dialogOTP(context);
 		}
@@ -113,6 +135,7 @@ class _LoginPageState extends State<LoginPage> {
 						children: <Widget>[
 							Expanded(
 								child: new TextField(
+									obscureText: true,
 									autofocus: true,
 									controller: OTPController,
 									decoration: InputDecoration(labelText: 'Kode OTP', hintText: 'XXXX'),
@@ -134,8 +157,67 @@ class _LoginPageState extends State<LoginPage> {
 	// STEP login2FAVerify OVOID FLUTTER
 	
 	Future<String> login2FAVerify(BuildContext context) async {
+		final refId = await getPreference('refId');
 		final accessToken = (await ovoid.login2FAVerify(refId, OTPController.text, mobileController.text))['updateAccessToken'];
 		
-		// PINDAH KE FORM MASUKAN PINOVO
+		if (accessToken.isEmpty) {
+			alert(context, 'Response login2FAVerify take data accessToken not found !');
+		} else {
+			setState(() { setPreference('mobile', mobileController.text); });
+			setState(() { setPreference('accessToken', accessToken); });
+			
+			dialogPINOVO(context);
+		}
+	}
+	
+	Future<String> dialogPINOVO(BuildContext context) async {
+		return showDialog<String>(
+			context: context,
+			barrierDismissible: false, // dialog is dismissible with a tap on the barrier
+			builder: (BuildContext context) {
+				return AlertDialog(
+					title: Text('Masukan PIN OVO'),
+					content: new Row(
+						children: <Widget>[
+							Expanded(
+								child: new TextField(
+									autofocus: true,
+									obscureText: true,
+									controller: PINOVOController,
+									decoration: InputDecoration(labelText: 'PIN OVO', hintText: 'XXXXXX'),
+								)
+							)
+						],
+					),
+					actions: <Widget>[
+						FlatButton(
+							child: Text('Proses'),
+							onPressed: () { loginSecurityCode(context); },
+						),
+					],
+				);
+			},
+		);
+	}
+	
+	// STEP loginSecurityCode OVOID FLUTTER
+	
+	Future<String> loginSecurityCode(BuildContext context) async {
+		String accessToken = await getPreference('accessToken');
+		
+		final response = await ovoid.loginSecurityCode(PINOVOController.text, accessToken);
+		
+		accessToken = response['token'];
+		
+		if (accessToken.isEmpty) {
+			alert(context, 'Response loginSecurityCode take data accessToken not found !');
+		} else {
+			setState(() { setPreference('fullName', response['fullName']); });
+			setState(() { setPreference('email', response['email']); });
+			setState(() { setPreference('isEmailVerified', response['isEmailVerified']); });
+			setState(() { setPreference('accessToken', response['updateAccessToken']); });
+			
+			Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardPage(appTitle: appTitle)));
+		}
 	}
 }
