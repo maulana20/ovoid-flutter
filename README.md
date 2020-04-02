@@ -16,7 +16,15 @@ Repository berikut ini merupakan porting dari [ovoid](https://github.com/lintang
 
 ### Instalasi
 
+```js
 `flutter pub get`
+```
+
+### Buka pada folder example dan jalankan
+
+```js
+`flutter run`
+```
 
 ### Dokumentasi
 ```js
@@ -37,6 +45,11 @@ final accessToken = (await ovoid.login2FAVerify(refId, '<OTP>', '<mobilePhone>')
 ```js
 final token = (await ovoid.loginSecurityCode('<PINOVO>', accessToken))['token'];
 ```
+#### Mendapatkan balance
+```js
+ovoid.authToken = token;
+final response = await ovoid.balanceModel();
+```
 #### Logout
 ```js
 ovoid.authToken = token;
@@ -45,6 +58,8 @@ await ovoid.logout();
 #### Contoh
 ##### login (masukan nomor handphone, dialog OTP, dialog PIN)
 ![login](https://github.com/maulana20/ovoid-flutter/blob/master/screen/login.jpg)
+##### dashboard
+![login](https://github.com/maulana20/ovoid-flutter/blob/master/screen/dashboard.jpg)
 
 ### Author
 
