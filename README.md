@@ -5,7 +5,7 @@ Repository berikut ini merupakan porting dari [ovoid](https://github.com/lintang
 |---|---|
 | `login2FA`  | Ok |
 | `login2FAVerify`  | Ok |
-| `loginSecurityCode`  | In Progress  |
+| `loginSecurityCode`  | Ok  |
 | `getBudget`  | In Progress  |
 | `balanceModel`  | In Progress  |
 | `logout`  | In Progress  |
@@ -33,6 +33,18 @@ final refId = (await ovoid.login2FA('<mobilePhone>'))['refId'];
 ```js
 final accessToken = (await ovoid.login2FAVerify(refId, '<OTP>', '<mobilePhone>'))['updateAccessToken'];
 ```
+##### Langkah 3
+```js
+final token = (await ovoid.loginSecurityCode('<PINOVO>', accessToken))['token'];
+```
+#### Logout
+```js
+ovoid.authToken = token;
+await ovoid.logout();
+```
+#### Contoh
+##### login (masukan nomor handphone, dialog OTP, dialog PIN)
+![login](https://github.com/maulana20/ovoid-flutter/blob/master/screen/login.jpg)
 
 ### Author
 
