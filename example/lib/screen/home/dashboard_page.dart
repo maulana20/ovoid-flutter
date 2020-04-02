@@ -60,15 +60,19 @@ class _DashboardPageState extends State<DashboardPage> {
 		await ovoid.logout();
 	}
 	
-	Future<String> setInit() async {
+	initPreference() async {
 		fullName = await getPreference('fullName');
 		email = await getPreference('email');
+		print(fullName);
+		print(email);
+		setState(() => fullName = fullName);
+		setState(() => email = email);
 	}
 	
 	@override
 	void initState() {
 		super.initState();
-		setInit();
+		initPreference();
 	}
 	
 	@override
@@ -125,7 +129,8 @@ class _DashboardPageState extends State<DashboardPage> {
 	String getInitials(String nameString) {
 		if (nameString.isEmpty) return " ";
 		
-		List<String> nameArray = [ nameString.replaceAll(RegExp(r"\s+\b|\b\s"), " ").split(" ")[0], nameString.replaceAll(new RegExp(r"\s+\b|\b\s"), " ").split(" ")[1] ];
+		List<String> arrayValue = nameString.replaceAll(RegExp(r"\s+\b|\b\s"), " ").split(" ");
+		List<String> nameArray = (arrayValue.length > 1) ? [ arrayValue[0], arrayValue[1] ] : [ arrayValue[0] ];
 		
 		String initials = ((nameArray[0])[0] != null ? (nameArray[0])[0] : " ") + (nameArray.length == 1 ? " " : (nameArray[nameArray.length - 1])[0]);
 		
@@ -148,6 +153,8 @@ class ProfileFragment extends StatefulWidget {
 class _ProfileFragmentState extends State<ProfileFragment> {
 	String fullName;
 	String email;
+	String isEmailVerified;
+	String mobile;
 	
 	Future<String> setPreference(String index, String value) async {
 		SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -159,18 +166,34 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 		return preferences.getString(index);
 	}
 	
-	void initState() async {
+	initPreference() async {
 		fullName = await getPreference('fullName');
 		email = await getPreference('email');
+		isEmailVerified = await getPreference('isEmailVerified');
+		mobile = await getPreference('mobile');
+		setState(() => fullName = fullName);
+		setState(() => email = email);
+		setState(() => isEmailVerified = isEmailVerified);
+		setState(() => mobile = mobile);
+	}
+	
+	@override
+	void initState() {
+		super.initState();
+		initPreference();
 	}
 	
 	@override
 	Widget build(BuildContext context) {
 		return Container(
+			padding: EdgeInsets.all(5.0),
 			child: Column(
+				crossAxisAlignment: CrossAxisAlignment.start,
 				children: <Widget>[
 					Text("nama : ${fullName}"),
-					Text("nama : ${email}"),
+					Text("email : ${email}"),
+					Text("verified : ${isEmailVerified}"),
+					Text("mobile : ${mobile}"),
 				]
 			)
 		);
