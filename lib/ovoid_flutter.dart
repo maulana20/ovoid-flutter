@@ -29,6 +29,8 @@ class OvoidFlutter {
 		http.headers = headers;
 		final response = await http.post(BASE_ENDPOINT + Action.login2FA, body: body);
 		
+		if (!["", null, false, 0].contains(response['code'])) return { 'code': '${response['code']}', 'message': response['message'] };
+		
 		return {
 			'refId'				: response['refId']
 		};
@@ -49,6 +51,8 @@ class OvoidFlutter {
 		
 		http.headers = headers;
 		final response = await http.post(BASE_ENDPOINT + Action.login2FAVerify, body: body);
+		
+		if (!["", null, false, 0].contains(response['code'])) return { 'code': '${response['code']}', 'message': response['message'] };
 		
 		return {
 			'mobile'			: response['mobile'],
@@ -71,6 +75,8 @@ class OvoidFlutter {
 		
 		http.headers = headers;
 		final response = await http.post(BASE_ENDPOINT + Action.loginSecurityCode, body: body);
+		
+		if (!["", null, false, 0].contains(response['code'])) return { 'code': '${response['code']}', 'message': response['message'] };
 		
 		return {
 			'token'				: response['token'],

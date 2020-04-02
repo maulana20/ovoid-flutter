@@ -113,13 +113,18 @@ class _LoginPageState extends State<LoginPage> {
 	// STEP login2FA OVOID FLUTTER
 	
 	Future<String> login2FA(BuildContext context) async {
-		final refId = (await ovoid.login2FA(mobileController.text))['refId'];
 		
-		setState(() { setPreference('refId', refId); });
 		
-		if (refId.isEmpty) {
-			alert(context, 'Response login2FA take data refId not found !');
+		final response = await ovoid.login2FA(mobileController.text);
+		
+		if (["", null, false, 0].contains(response['refId'])) {
+			if (!["", null, false, 0].contains(response['code'])) {
+				alert(context, response['message']);
+			} else {
+				alert(context, 'Response login2FA take data refId not found !');
+			}
 		} else {
+			setState(() { setPreference('refId', response['refId']); });
 			dialogOTP(context);
 		}
 	}
@@ -135,6 +140,7 @@ class _LoginPageState extends State<LoginPage> {
 						children: <Widget>[
 							Expanded(
 								child: new TextField(
+									keyboardType: TextInputType.number,
 									obscureText: true,
 									autofocus: true,
 									controller: OTPController,
@@ -158,13 +164,17 @@ class _LoginPageState extends State<LoginPage> {
 	
 	Future<String> login2FAVerify(BuildContext context) async {
 		final refId = await getPreference('refId');
-		final accessToken = (await ovoid.login2FAVerify(refId, OTPController.text, mobileController.text))['updateAccessToken'];
+		final response = await ovoid.login2FAVerify(refId, OTPController.text, mobileController.text);
 		
-		if (accessToken.isEmpty) {
-			alert(context, 'Response login2FAVerify take data accessToken not found !');
+		if (["", null, false, 0].contains(response['updateAccessToken'])) {
+			if (!["", null, false, 0].contains(response['code'])) {
+				alert(context, response['message']);
+			} else {
+				alert(context, 'Response login2FAVerify take data accessToken not found !');
+			}
 		} else {
 			setState(() { setPreference('mobile', mobileController.text); });
-			setState(() { setPreference('accessToken', accessToken); });
+			setState(() { setPreference('accessToken', response['updateAccessToken']); });
 			
 			dialogPINOVO(context);
 		}
@@ -181,6 +191,7 @@ class _LoginPageState extends State<LoginPage> {
 						children: <Widget>[
 							Expanded(
 								child: new TextField(
+									keyboardType: TextInputType.number,
 									autofocus: true,
 									obscureText: true,
 									controller: PINOVOController,
@@ -207,15 +218,17 @@ class _LoginPageState extends State<LoginPage> {
 		
 		final response = await ovoid.loginSecurityCode(PINOVOController.text, accessToken);
 		
-		accessToken = response['token'];
-		
-		if (accessToken.isEmpty) {
-			alert(context, 'Response loginSecurityCode take data accessToken not found !');
+		if (["", null, false, 0].contains(response['token'])) {
+			if (!["", null, false, 0].contains(response['code'])) {
+				alert(context, response['message']);
+			} else {
+				alert(context, 'Response loginSecurityCode take data token not found !');
+			}
 		} else {
 			setState(() { setPreference('fullName', response['fullName']); });
 			setState(() { setPreference('email', response['email']); });
-			setState(() { setPreference('isEmailVerified', response['isEmailVerified']); });
-			setState(() { setPreference('accessToken', response['updateAccessToken']); });
+			setState(() { setPreference('isEmailVerified', '${response['isEmailVerified']}'); });
+			setState(() { setPreference('token', response['token']); });
 			
 			Navigator.push(context, MaterialPageRoute(builder: (context) => DashboardPage(appTitle: appTitle)));
 		}

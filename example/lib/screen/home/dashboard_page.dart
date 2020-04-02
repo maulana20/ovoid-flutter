@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ovoid_flutter/ovoid_flutter.dart';
@@ -54,13 +56,19 @@ class _DashboardPageState extends State<DashboardPage> {
 	}
 	
 	Future logout() async {
-		ovoid.authToken = await getPreference('accessToken');
+		ovoid.authToken = await getPreference('token');
 		await ovoid.logout();
 	}
 	
-	void initState() async {
+	Future<String> setInit() async {
 		fullName = await getPreference('fullName');
 		email = await getPreference('email');
+	}
+	
+	@override
+	void initState() {
+		super.initState();
+		setInit();
 	}
 	
 	@override
