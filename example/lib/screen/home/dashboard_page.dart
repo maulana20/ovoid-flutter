@@ -156,11 +156,6 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 	String isEmailVerified;
 	String mobile;
 	
-	Future<String> setPreference(String index, String value) async {
-		SharedPreferences preferences = await SharedPreferences.getInstance();
-		setState(() => preferences.setString('${index}', '${value}'));
-	}
-	
 	Future<String> getPreference(String index) async {
 		SharedPreferences preferences = await SharedPreferences.getInstance();
 		return preferences.getString(index);
@@ -200,7 +195,31 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 	}
 }
 
-class BalanceFragment extends StatelessWidget{
+class BalanceFragment extends StatefulWidget {
+	@override
+	_BalanceFragmentState createState() => new _BalanceFragmentState();
+}
+
+class _BalanceFragmentState extends State<BalanceFragment> {
+	OvoidFlutter ovoid = new OvoidFlutter();
+	
+	Future<String> getPreference(String index) async {
+		SharedPreferences preferences = await SharedPreferences.getInstance();
+		return preferences.getString(index);
+	}
+	
+	getBalance() async {
+		ovoid.authToken = await getPreference('token');
+		final response = await ovoid.balanceModel();
+		print(response);
+	}
+	
+	@override
+	void initState() {
+		super.initState();
+		getBalance();
+	}
+	
 	@override
 	Widget build(BuildContext context) {
 		return Center(

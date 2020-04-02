@@ -98,7 +98,8 @@ class OvoidFlutter {
 		http.headers = headers;
 		final response = await http.get(BASE_ENDPOINT + Action.getBudget);
 		
-		print(response);
+		if (!["", null, false, 0].contains(response['code'])) return { 'code': '${response['code']}', 'message': response['message'] };
+		
 		return {};
 	}
 	
@@ -109,7 +110,94 @@ class OvoidFlutter {
 		final response = await http.get(BASE_ENDPOINT + Action.balanceModel);
 		
 		print(response);
-		return {};
+		if (!["", null, false, 0].contains(response['code'])) return { 'code': '${response['code']}', 'message': response['message'] };
+		
+		return {
+			'balance': {
+				'OVOCash': {
+					'cardBalance'	: response['balance']['001']['card_balance'],
+					'card_no'		: response['balance']['001']['card_no']
+				},
+				'OVO': {
+					'cardBalance'	: response['balance']['600']['card_balance'],
+					'card_no'		: response['balance']['600']['card_no']
+				}
+			},
+			'permission': '',
+			'profile': {
+				'dateCreated'		: response['profile']['dateCreated'],
+				'dateUpdated'		: response['profile']['dateUpdated'],
+				'status'			: response['profile']['status'],
+				'createdBy'			: response['profile']['createdBy'],
+				'updatedBy'			: response['profile']['updatedBy'],
+				'fullName'			: response['profile']['fullName'],
+				'nickName'			: response['profile']['nickName'],
+				'lockStatus'		: response['profile']['lockStatus'],
+				'type'				: response['profile']['type'],
+				'level'				: response['profile']['level'],
+				'state'				: response['profile']['state'],
+				'ktpCard'			: response['profile']['ktpCard'],
+				'lmpCard'			: response['profile']['lmpCard'],
+				'passport'			: response['profile']['passport'],
+				'document'			: response['profile']['document'],
+				'refNo'				: response['profile']['refNo'],
+				'userLevel'			: response['profile']['userLevel'],
+				'ovoId'				: response['profile']['ovoId'],
+				'dateOfBirth'		: response['profile']['dateOfBirth'],
+				'address'			: response['profile']['address'],
+				
+				'telephones'		: response['profile']['telephones'],
+				'emails'			: response['profile']['emails'],
+				'cards'				: response['profile']['cards'],
+				'macAddress'		: response['profile']['macAddress'],
+				'drivers'			: response['profile']['drivers'],
+				'ovoCard'			: response['profile']['ovoCard'],
+				'organization'		: response['profile']['organization'],
+				'bonus'				: response['profile']['bonus'],
+				'mobilePhoneNumber'	: response['profile']['mobilePhoneNumber'],
+				'email'				: response['profile']['email'],
+				'registrationOrigin': response['profile']['registrationOrigin'],
+				'dateOnUpgrade'		: response['profile']['dateOnUpgrade'],
+				'birthPlace'		: response['profile']['birthPlace'],
+				'religion'			: response['profile']['religion'],
+				'nationality'		: response['profile']['nationality'],
+				'npwpCard'			: response['profile']['npwpCard'],
+				'company'			: response['profile']['company'],
+				'family'			: response['profile']['family'],
+				'occupation'		: response['profile']['occupation'],
+				'motherMaidenName'	: response['profile']['motherMaidenName'],
+				'correspondenceType': response['profile']['correspondenceType'],
+				'cif'				: response['profile']['cif'],
+				'firstSignIn'		: response['profile']['firstSignIn'],
+				'lastSignIn'		: response['profile']['lastSignIn'],
+				'camId'				: response['profile']['camId'],
+				
+				'devices'			: response['profile']['devices'],
+				
+				'boltDevices'		: response['profile']['boltDevices'],
+				'isVeirfy'			: response['profile']['isVeirfy'],
+				'verifyDate'		: response['profile']['verifyDate'],
+				
+				'LinkedMerchants'	: response['profile']['LinkedMerchants'],
+				'investment'		: response['profile']['investment'],
+				'camInvestment'		: response['profile']['camInvestment'],
+				'bankAccount'		: response['profile']['bankAccount'],
+				'savingAccount'		: response['profile']['savingAccount'],
+				
+				'badges'			: response['profile']['badges'],
+				'kycweb'			: response['profile']['kycweb'],
+				'gender'			: response['profile']['gender'],
+				'maritalStatus'		: response['profile']['maritalStatus'],
+				'isEmailVerified'	: response['profile']['isEmailVerified'],
+				'isPhoneVerified'	: response['profile']['isPhoneVerified'],
+				'isSecurityCodeSet'	: response['profile']['isSecurityCodeSet'],
+				'loyaltyId'			: response['profile']['loyaltyId'],
+				'eMoneyId'			: response['profile']['eMoneyId'],
+				'eMoneyOvoId'		: response['profile']['eMoneyOvoId'],
+				
+				'config'			: response['profile']['config'],
+			}
+		};
 	}
 	
 	Future generateTrxId(double amount, String actionMark) async {
