@@ -109,7 +109,6 @@ class OvoidFlutter {
 		http.headers = headers;
 		final response = await http.get(BASE_ENDPOINT + Action.balanceModel);
 		
-		print(response);
 		if (!["", null, false, 0].contains(response['code'])) return { 'code': '${response['code']}', 'message': response['message'] };
 		
 		return {
@@ -123,7 +122,7 @@ class OvoidFlutter {
 					'card_no'		: response['balance']['600']['card_no']
 				}
 			},
-			'permission': '',
+			'permission': '${response['permissions']}',
 			'profile': {
 				'dateCreated'		: response['profile']['dateCreated'],
 				'dateUpdated'		: response['profile']['dateUpdated'],
@@ -306,6 +305,8 @@ class OvoidFlutter {
 		http.headers = headers;
 		final response = await http.get(BASE_ENDPOINT + Action.logout);
 		
+		if (!["", null, false, 0].contains(response['code'])) return { 'code': '${response['code']}', 'message': response['message'] };
+		
 		return {};
 	}
 	
@@ -314,6 +315,8 @@ class OvoidFlutter {
 		
 		http.headers = headers;
 		final response = await http.get(BASE_ENDPOINT + Action.unreadHistory);
+		
+		if (!["", null, false, 0].contains(response['code'])) return { 'code': '${response['code']}', 'message': response['message'] };
 		
 		return {
 			'total'				: response['Total']
@@ -325,6 +328,8 @@ class OvoidFlutter {
 		
 		http.headers = headers;
 		final response = await http.get(BASE_ENDPOINT + Action.allNotification);
+		
+		if (!["", null, false, 0].contains(response['code'])) return { 'code': '${response['code']}', 'message': response['message'] };
 		
 		return {
 			'notifications'		: response['notifications']

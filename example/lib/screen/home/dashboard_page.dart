@@ -6,6 +6,10 @@ import 'package:ovoid_flutter/ovoid_flutter.dart';
 
 import '../login/login_page.dart';
 
+import 'fragment/profile_fragment.dart';
+import 'fragment/budget_fragment.dart';
+import 'fragment/notification_fragment.dart';
+
 class DashboardPage extends StatefulWidget {
 	DashboardPage({ this.appTitle });
 	
@@ -13,7 +17,8 @@ class DashboardPage extends StatefulWidget {
 	
 	final drawerItem = [
 		new DrawerItem("Profil", Icons.person),
-		new DrawerItem("Dana", Icons.account_balance_wallet),
+		new DrawerItem("Anggaran", Icons.account_balance_wallet),
+		new DrawerItem("Notif", Icons.notifications_active),
 	];
 	
 	@override
@@ -29,13 +34,15 @@ class _DashboardPageState extends State<DashboardPage> {
 	
 	String fullName;
 	String email;
+	int totalUnread;
 	
 	int _selectedDrawerIndex = 0;
 	
 	_getDrawerItemWidget(int pos) {
 		switch (pos) {
 			case 0: return new ProfileFragment();
-			case 1: return new BalanceFragment();
+			case 1: return new BudgetFragment();
+			case 2: return new NotificationFragment();
 			default: return new Text("Error");
 		}
 	}
@@ -60,13 +67,19 @@ class _DashboardPageState extends State<DashboardPage> {
 		await ovoid.logout();
 	}
 	
+	Future getUnreadNotification() async {
+		ovoid.authToken = await getPreference('token');
+		return (await ovoid.unreadHistory())['total'];
+	}
+	
 	initPreference() async {
 		fullName = await getPreference('fullName');
 		email = await getPreference('email');
-		print(fullName);
-		print(email);
+		totalUnread = await getUnreadNotification();
 		setState(() => fullName = fullName);
 		setState(() => email = email);
+		setState(() => totalUnread = totalUnread);
+		print(totalUnread);
 	}
 	
 	@override
@@ -83,7 +96,7 @@ class _DashboardPageState extends State<DashboardPage> {
 			drawerOptions.add(
 				ListTile(
 					leading: new Icon(d.icon),
-					title: new Text(d.title),
+					title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(d.title), Text((d.title == "Notif" ? (totalUnread > 0 ? "${totalUnread}" : "") : ""), style: TextStyle(color: Colors.grey[600], fontSize: 12.0))]),
 					trailing: new Icon(Icons.arrow_right),
 					selected: i == _selectedDrawerIndex,
 					onTap: () => _onSelectItem(i),
@@ -143,87 +156,4 @@ class DrawerItem {
 	IconData icon;
 	
 	DrawerItem(this.title, this.icon);
-}
-
-class ProfileFragment extends StatefulWidget {
-	@override
-	_ProfileFragmentState createState() => new _ProfileFragmentState();
-}
-
-class _ProfileFragmentState extends State<ProfileFragment> {
-	String fullName;
-	String email;
-	String isEmailVerified;
-	String mobile;
-	
-	Future<String> getPreference(String index) async {
-		SharedPreferences preferences = await SharedPreferences.getInstance();
-		return preferences.getString(index);
-	}
-	
-	initPreference() async {
-		fullName = await getPreference('fullName');
-		email = await getPreference('email');
-		isEmailVerified = await getPreference('isEmailVerified');
-		mobile = await getPreference('mobile');
-		setState(() => fullName = fullName);
-		setState(() => email = email);
-		setState(() => isEmailVerified = isEmailVerified);
-		setState(() => mobile = mobile);
-	}
-	
-	@override
-	void initState() {
-		super.initState();
-		initPreference();
-	}
-	
-	@override
-	Widget build(BuildContext context) {
-		return Container(
-			padding: EdgeInsets.all(5.0),
-			child: Column(
-				crossAxisAlignment: CrossAxisAlignment.start,
-				children: <Widget>[
-					Text("nama : ${fullName}"),
-					Text("email : ${email}"),
-					Text("verified : ${isEmailVerified}"),
-					Text("mobile : ${mobile}"),
-				]
-			)
-		);
-	}
-}
-
-class BalanceFragment extends StatefulWidget {
-	@override
-	_BalanceFragmentState createState() => new _BalanceFragmentState();
-}
-
-class _BalanceFragmentState extends State<BalanceFragment> {
-	OvoidFlutter ovoid = new OvoidFlutter();
-	
-	Future<String> getPreference(String index) async {
-		SharedPreferences preferences = await SharedPreferences.getInstance();
-		return preferences.getString(index);
-	}
-	
-	getBalance() async {
-		ovoid.authToken = await getPreference('token');
-		final response = await ovoid.balanceModel();
-		print(response);
-	}
-	
-	@override
-	void initState() {
-		super.initState();
-		getBalance();
-	}
-	
-	@override
-	Widget build(BuildContext context) {
-		return Center(
-			child: new Text("Hello Fragment Balance"),
-		);
-	}
 }

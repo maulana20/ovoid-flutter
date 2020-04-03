@@ -6,10 +6,10 @@ Repository berikut ini merupakan porting dari [ovoid](https://github.com/lintang
 | `login2FA`  | Ok |
 | `login2FAVerify`  | Ok |
 | `loginSecurityCode`  | Ok  |
-| `getBudget`  | In Progress  |
-| `balanceModel`  | In Progress  |
-| `logout`  | In Progress  |
-| `unreadHistory`  | In Progress  |
+| `getBudget`  | Ok  |
+| `balanceModel`  | Ok  |
+| `logout`  | Ok  |
+| `unreadHistory`  | Ok  |
 | `getWalletTransaction`  | In Progress  |
 | `generateTrxId`  | In Progress  |
 | `transferOvo`  | In Progress  |
@@ -44,6 +44,18 @@ final accessToken = (await ovoid.login2FAVerify(refId, '<OTP>', '<mobilePhone>')
 ##### Langkah 3
 ```js
 final token = (await ovoid.loginSecurityCode('<PINOVO>', accessToken))['token'];
+```
+#### Mendapatkan jumlah notifikasi yang belum terbaca
+##### Mendapatkan jumlah notifikasi akun ovo anda
+```js
+ovoid.authToken = token;
+final total = (await ovoid.unreadHistory())['total'];
+```
+#### Mendapatkan notifikasi
+##### Mendapatkan notifikasi akun ovo anda
+```js
+ovoid.authToken = token;
+final notif = (await ovoid.unreadHistory())['allNotification'];
 ```
 #### Mendapatkan balance
 ```js
