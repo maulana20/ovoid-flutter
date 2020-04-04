@@ -55,7 +55,7 @@ final total = (await ovoid.unreadHistory())['total'];
 ##### Mendapatkan notifikasi akun ovo anda
 ```js
 ovoid.authToken = token;
-final notif = (await ovoid.unreadHistory())['allNotification'];
+final notif = (await ovoid.allNotification())['allNotification'];
 ```
 #### Mendapatkan balance
 ```js

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'login/login_page.dart';
-import 'home/dashboard_page.dart';
 
 class OvoidScreen extends StatelessWidget {
 	String appTitle = 'OVOID FLUTTER';
@@ -12,7 +11,7 @@ class OvoidScreen extends StatelessWidget {
 			theme: ThemeData(
 				primarySwatch: Colors.blue,
 			),
-			home: DashboardPage(appTitle: appTitle),
+			home: LoginPage(appTitle: appTitle),
 		);
 	}
 }

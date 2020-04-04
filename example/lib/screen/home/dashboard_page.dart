@@ -96,7 +96,7 @@ class _DashboardPageState extends State<DashboardPage> {
 			drawerOptions.add(
 				ListTile(
 					leading: new Icon(d.icon),
-					title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(d.title), Text((d.title == "Notif" ? (totalUnread > 0 ? "${totalUnread}" : "") : ""), style: TextStyle(color: Colors.grey[600], fontSize: 12.0))]),
+					title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [ Text(d.title), showNotif(d.title) ]),
 					trailing: new Icon(Icons.arrow_right),
 					selected: i == _selectedDrawerIndex,
 					onTap: () => _onSelectItem(i),
@@ -137,6 +137,25 @@ class _DashboardPageState extends State<DashboardPage> {
 			),
 			body: _getDrawerItemWidget(_selectedDrawerIndex),
 		);
+	}
+	
+	Widget showNotif(String title) {
+		if (title == "Notif") {
+			if (totalUnread > 0) {
+				return Container(
+					padding: EdgeInsets.all(5.0),
+					decoration: BoxDecoration(
+						color: Colors.grey[300],
+						borderRadius: BorderRadius.circular(10.0),
+					),
+					child: Text("${totalUnread}", style: TextStyle(color: Colors.white, fontSize: 12.0))
+				);
+			} else {
+				return Text("");
+			}
+		} else {
+			return Text("");
+		}
 	}
 	
 	String getInitials(String nameString) {
