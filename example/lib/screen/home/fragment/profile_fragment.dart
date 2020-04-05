@@ -58,20 +58,25 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 			child: ListView(
 				padding: EdgeInsets.zero,
 				children: [
-					Container(
-						padding: EdgeInsets.all(5.0),
-						color: Colors.white,
-						child: Column(
-							children: [
-								dataOvo('OVO', '${result['balance']['OVO']['card_no']}', double.parse('${result['balance']['OVO']['cardBalance']}')),
-								dataOvo('OVO Cash', '${result['balance']['OVOCash']['card_no']}', double.parse('${result['balance']['OVOCash']['cardBalance']}')),
-							]
-						),
-					),
+					infoOvo(),
 					SizedBox(height: 5.0),
-					dataProfile()
+					setTitle('Data Pribadi'),
+					infoProfile()
 				]
 			)
+		);
+	}
+	
+	Widget infoOvo() {
+		return Container(
+			padding: EdgeInsets.all(5.0),
+			color: Colors.white,
+			child: Column(
+				children: [
+					dataOvo('OVO', '${result['balance']['OVO']['card_no']}', double.parse('${result['balance']['OVO']['cardBalance']}')),
+					dataOvo('OVO Cash', '${result['balance']['OVOCash']['card_no']}', double.parse('${result['balance']['OVOCash']['cardBalance']}')),
+				]
+			),
 		);
 	}
 	
@@ -86,34 +91,64 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 						child: Row(
 							mainAxisAlignment: MainAxisAlignment.spaceBetween,
 							children: [
-								Text(type, style: TextStyle(fontSize: 14.0)),
+								Text(type, style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold)),
 								Container(
 									padding: EdgeInsets.all(5.0),
 									decoration: BoxDecoration(
 										color: Colors.grey[300],
 										borderRadius: BorderRadius.circular(10.0),
 									),
-									child: Text(card, style: TextStyle(color: Colors.white, fontSize: 12.0)),
+									child: Text(card, style: TextStyle(color: Colors.white, fontSize: 11.0)),
 								),
 							]
 						),
 					),
-					Text('${balance}', style: TextStyle(fontSize: 14.0)),
+					Text('${balance}', style: TextStyle(fontSize: 12.0)),
 				]
 			),
 		);
 	}
 	
-	Widget dataProfile() {
+	Widget setTitle(String title) {
 		return Container(
 			padding: EdgeInsets.all(5.0),
 			child: Row(
 				mainAxisAlignment: MainAxisAlignment.spaceBetween,
 				children: [
-					Text('Data Pribadi', style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold)),
+					Text(title, style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold)),
 					Icon(Icons.keyboard_arrow_down)
 				]
 			)
+		);
+	}
+	
+	Widget infoProfile() {
+		return Container(
+			padding: EdgeInsets.all(5.0),
+			color: Colors.white,
+			child: Column(
+				children: [
+					record('Nama', '${result['profile']['fullName']}'),
+					record('Nama Panggil', '${result['profile']['nickName']}'),
+					record('OVO ID', '${result['profile']['ovoId']}'),
+					record('No Handphone', '${result['profile']['telephones'][0]['number']}'),
+					record('Email', '${result['profile']['emails'][0]['address']}'),
+					record('Status', '${result['profile']['state']}'),
+				]
+			),
+		);
+	}
+	
+	Widget record(String name, String value) {
+		return Container(
+			padding: EdgeInsets.all(5.0),
+			child: Row(
+				mainAxisAlignment: MainAxisAlignment.spaceBetween,
+				children: [
+					Text(name, style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold)),
+					Text(value, style: TextStyle(fontSize: 12.0)),
+				]
+			),
 		);
 	}
 }

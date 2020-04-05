@@ -100,7 +100,10 @@ class OvoidFlutter {
 		
 		if (!["", null, false, 0].contains(response['code'])) return { 'code': '${response['code']}', 'message': response['message'] };
 		
-		return {};
+		return {
+			'budget'			: response['budget'],
+			'summary'			: response['summary']
+		};
 	}
 	
 	Future balanceModel() async {

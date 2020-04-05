@@ -75,11 +75,12 @@ class _DashboardPageState extends State<DashboardPage> {
 	initPreference() async {
 		fullName = await getPreference('fullName');
 		email = await getPreference('email');
+		
 		totalUnread = await getUnreadNotification();
-		setState(() => fullName = fullName);
-		setState(() => email = email);
-		setState(() => totalUnread = totalUnread);
-		print(totalUnread);
+		
+		setState(() => fullName = !["", null, false, 0].contains(fullName) ? fullName : " ");
+		setState(() => email = !["", null, false, 0].contains(email) ? email : " ");
+		setState(() => totalUnread = !["", null, false, 0].contains(totalUnread) ? totalUnread : 0);
 	}
 	
 	@override
@@ -166,7 +167,7 @@ class _DashboardPageState extends State<DashboardPage> {
 		
 		String initials = ((nameArray[0])[0] != null ? (nameArray[0])[0] : " ") + (nameArray.length == 1 ? " " : (nameArray[nameArray.length - 1])[0]);
 		
-		return initials;
+		return initials.toUpperCase();
 	}
 }
 
