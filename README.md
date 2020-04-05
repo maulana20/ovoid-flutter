@@ -14,16 +14,16 @@ Repository berikut ini merupakan porting dari [ovoid](https://github.com/lintang
 | `generateTrxId`  | In Progress  |
 | `transferOvo`  | In Progress  |
 
-### Instalasi
+### Ambil paket
 
 ```js
-`flutter pub get`
+flutter pub get
 ```
 
-### Buka pada folder example dan jalankan
+### Jalankan pada folder example
 
 ```js
-`flutter run`
+flutter run
 ```
 
 ### Dokumentasi
@@ -55,7 +55,7 @@ final total = (await ovoid.unreadHistory())['total'];
 ##### Mendapatkan notifikasi akun ovo anda
 ```js
 ovoid.authToken = token;
-final notif = (await ovoid.unreadHistory())['allNotification'];
+final notifikasi = (await ovoid.allNotification())['allNotification'];
 ```
 #### Mendapatkan balance
 ```js
@@ -68,10 +68,19 @@ ovoid.authToken = token;
 await ovoid.logout();
 ```
 #### Contoh
-##### login (masukan nomor handphone, dialog OTP, dialog PIN)
+##### login
+- masukan nomor handphone
+- dialog OTP
+- dialog PIN
 ![login](https://github.com/maulana20/ovoid-flutter/blob/master/screen/login.jpg)
-##### dashboard
+##### menu utama
 ![login](https://github.com/maulana20/ovoid-flutter/blob/master/screen/dashboard.jpg)
+##### profil
+![profile](https://github.com/maulana20/ovoid-flutter/blob/master/screen/profile.jpg)
+##### anggaran
+![budget](https://github.com/maulana20/ovoid-flutter/blob/master/screen/budget.jpg)
+##### notifikasi
+![notification](https://github.com/maulana20/ovoid-flutter/blob/master/screen/notification.jpg)
 
 ### Author
 

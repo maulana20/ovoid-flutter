@@ -75,11 +75,12 @@ class _DashboardPageState extends State<DashboardPage> {
 	initPreference() async {
 		fullName = await getPreference('fullName');
 		email = await getPreference('email');
+		
 		totalUnread = await getUnreadNotification();
-		setState(() => fullName = fullName);
-		setState(() => email = email);
-		setState(() => totalUnread = totalUnread);
-		print(totalUnread);
+		
+		setState(() => fullName = !["", null, false, 0].contains(fullName) ? fullName : " ");
+		setState(() => email = !["", null, false, 0].contains(email) ? email : " ");
+		setState(() => totalUnread = !["", null, false, 0].contains(totalUnread) ? totalUnread : 0);
 	}
 	
 	@override
@@ -96,7 +97,7 @@ class _DashboardPageState extends State<DashboardPage> {
 			drawerOptions.add(
 				ListTile(
 					leading: new Icon(d.icon),
-					title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [Text(d.title), Text((d.title == "Notif" ? (totalUnread > 0 ? "${totalUnread}" : "") : ""), style: TextStyle(color: Colors.grey[600], fontSize: 12.0))]),
+					title: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [ Text(d.title), showNotif(d.title) ]),
 					trailing: new Icon(Icons.arrow_right),
 					selected: i == _selectedDrawerIndex,
 					onTap: () => _onSelectItem(i),
@@ -139,6 +140,25 @@ class _DashboardPageState extends State<DashboardPage> {
 		);
 	}
 	
+	Widget showNotif(String title) {
+		if (title == "Notif") {
+			if (totalUnread > 0) {
+				return Container(
+					padding: EdgeInsets.all(5.0),
+					decoration: BoxDecoration(
+						color: Colors.grey[300],
+						borderRadius: BorderRadius.circular(10.0),
+					),
+					child: Text("${totalUnread}", style: TextStyle(color: Colors.white, fontSize: 12.0))
+				);
+			} else {
+				return Text("");
+			}
+		} else {
+			return Text("");
+		}
+	}
+	
 	String getInitials(String nameString) {
 		if (nameString.isEmpty) return " ";
 		
@@ -147,7 +167,7 @@ class _DashboardPageState extends State<DashboardPage> {
 		
 		String initials = ((nameArray[0])[0] != null ? (nameArray[0])[0] : " ") + (nameArray.length == 1 ? " " : (nameArray[nameArray.length - 1])[0]);
 		
-		return initials;
+		return initials.toUpperCase();
 	}
 }
 

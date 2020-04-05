@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -12,6 +13,11 @@ class NotificationFragment extends StatefulWidget {
 class _NotificationFragmentState extends State<NotificationFragment> {
 	OvoidFlutter ovoid = new OvoidFlutter();
 	
+	bool isError = false;
+	String reason;
+	
+	List notifications;
+	
 	Future<String> getPreference(String index) async {
 		SharedPreferences preferences = await SharedPreferences.getInstance();
 		return preferences.getString(index);
@@ -20,7 +26,13 @@ class _NotificationFragmentState extends State<NotificationFragment> {
 	getNotification() async {
 		ovoid.authToken = await getPreference('token');
 		final response = await ovoid.allNotification();
-		print(response);
+		
+		if (!["", null, false, 0].contains(response['code'])) {
+			setState(() => isError = true);
+			setState(() => reason = !["", null, false, 0].contains(response['message']) ? response['message'] : " ");
+		} else {
+			setState(() => notifications = response['notifications']);
+		}
 	}
 	
 	@override
@@ -31,8 +43,34 @@ class _NotificationFragmentState extends State<NotificationFragment> {
 	
 	@override
 	Widget build(BuildContext context) {
+		return isError ? errorResult() : dataResult(context);
+	}
+	
+	Widget errorResult() {
 		return Center(
-			child: new Text("Hello Fragment Notification"),
+			child: new Text(reason),
+		);
+	}
+	
+	Widget dataResult(BuildContext context) {
+		return Container(
+			color: Colors.grey[200],
+			padding: EdgeInsets.all(10.0),
+			child: ListView.builder(
+				shrinkWrap: true,
+				itemCount: notifications.length,
+				itemBuilder: (context, index) {
+					Map<String, dynamic> message = jsonDecode(notifications[index]['message']);
+					return Card(
+						child: Padding(
+							padding: EdgeInsets.all(8.0),
+							child: ListTile(
+								title: Text(message['message'], style: TextStyle(fontSize: 14.0, )),
+							)
+						)
+					);
+				},
+			),
 		);
 	}
 }
