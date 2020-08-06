@@ -16,7 +16,7 @@ class _NotificationFragmentState extends State<NotificationFragment> {
 	bool isError = false;
 	String reason;
 	
-	List notifications;
+	List notifications = [];
 	
 	Future<String> getPreference(String index) async {
 		SharedPreferences preferences = await SharedPreferences.getInstance();

@@ -16,8 +16,8 @@ class _BudgetFragmentState extends State<BudgetFragment> {
 	bool isError = false;
 	String reason;
 	
-	List summary;
-	Map<String, dynamic> budget;
+	List summary = [];
+	Map<String, dynamic> budget = { 'amount': 0, 'spending': 0 };
 	
 	Future<String> getPreference(String index) async {
 		SharedPreferences preferences = await SharedPreferences.getInstance();

@@ -15,11 +15,30 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 	bool isError = false;
 	String reason;
 	
-	Map<String, dynamic> result;
+	Map<String, dynamic> result = { 'balance' : {}, 'profile': {} };
+	
+	int ovo_total = 0;
+	int ovocash_total = 0;
+	
+	String ovo_card = 'xxx';
+	String ovocash_card = 'xxx';
+	String handphone = 'xxx';
+	String email = 'xxx';
 	
 	Future<String> getPreference(String index) async {
 		SharedPreferences preferences = await SharedPreferences.getInstance();
 		return preferences.getString(index);
+	}
+	
+	Future<Map> setOvo(Map<String, dynamic> result) async {
+		setState(() => handphone = result['profile']['telephones'][0]['number']);
+		setState(() => email = result['profile']['emails'][0]['address']);
+		
+		setState(() => ovo_card = result['balance']['OVO']['card_no']);
+		setState(() => ovocash_card = result['balance']['OVOCash']['card_no']);
+		
+		setState(() => ovo_total = int.parse(result['balance']['OVO']['cardBalance']));
+		setState(() => ovocash_total = int.parse(result['balance']['OVOCash']['cardBalance']));
 	}
 	
 	getBalance() async {
@@ -31,6 +50,7 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 			setState(() => reason = !["", null, false, 0].contains(response['message']) ? response['message'] : " ");
 		} else {
 			setState(() => result = response);
+			setOvo(result);
 		}
 	}
 	
@@ -73,8 +93,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 			color: Colors.white,
 			child: Column(
 				children: [
-					dataOvo('OVO', '${result['balance']['OVO']['card_no']}', double.parse('${result['balance']['OVO']['cardBalance']}')),
-					dataOvo('OVO Cash', '${result['balance']['OVOCash']['card_no']}', double.parse('${result['balance']['OVOCash']['cardBalance']}')),
+					dataOvo('OVO', '${ovo_card}', double.parse('${ovo_total}')),
+					dataOvo('OVO Cash', '${ovocash_card}', double.parse('${ovocash_total}')),
 				]
 			),
 		);
@@ -131,8 +151,8 @@ class _ProfileFragmentState extends State<ProfileFragment> {
 					record('Nama', '${result['profile']['fullName']}'),
 					record('Nama Panggil', '${result['profile']['nickName']}'),
 					record('OVO ID', '${result['profile']['ovoId']}'),
-					record('No Handphone', '${result['profile']['telephones'][0]['number']}'),
-					record('Email', '${result['profile']['emails'][0]['address']}'),
+					record('No Handphone', handphone),
+					record('Email', email),
 					record('Status', '${result['profile']['state']}'),
 				]
 			),

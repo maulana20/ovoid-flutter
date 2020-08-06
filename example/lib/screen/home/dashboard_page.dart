@@ -34,7 +34,7 @@ class _DashboardPageState extends State<DashboardPage> {
 	
 	String fullName;
 	String email;
-	int totalUnread;
+	int totalUnread = 0;
 	
 	int _selectedDrawerIndex = 0;
 	
